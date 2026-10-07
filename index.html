@@ -97,22 +97,9 @@ section { padding-block: 72px; }
 .signup { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 40px; margin-top: 40px; align-items: start; }
 @media (max-width: 860px) { .signup { grid-template-columns: minmax(0, 1fr); gap: 28px; } }
 .lessons { display: grid; gap: 12px; }
-.lesson {
-  display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 16px; align-items: center;
-  border: 1px solid var(--line); border-radius: var(--r); padding: 20px 22px; cursor: pointer;
-  transition: background .2s ease, border-color .2s ease;
-}
-.lesson:hover { border-color: var(--muted); }
-.lesson input { position: absolute; opacity: 0; pointer-events: none; }
+.lesson { border: 1px solid var(--line); border-radius: var(--r); padding: 20px 22px; display: grid; gap: 2px; }
 .lesson .t { font-family: var(--display); font-weight: 600; text-transform: uppercase; letter-spacing: .01em; font-size: clamp(2rem, 7vw, 2.75rem); line-height: 1; }
-.lesson .h { grid-column: 1; color: var(--muted); font-variant-numeric: tabular-nums; }
-.lesson .dot {
-  grid-row: 1 / span 2; grid-column: 2; width: 28px; height: 28px; border-radius: 50%;
-  border: 1px solid var(--muted); display: grid; place-items: center; font-size: .875rem; color: transparent;
-}
-.lesson:has(input:checked) { background: var(--tint); border-color: var(--ink); }
-.lesson:has(input:checked) .dot { background: var(--ink); border-color: var(--ink); color: var(--ground); }
-.lesson:has(input:focus-visible) { outline: 2px solid var(--ink); outline-offset: 3px; }
+.lesson .h { color: var(--muted); font-variant-numeric: tabular-nums; }
 .meta { margin-top: 16px; }
 
 form { display: grid; gap: 16px; }
@@ -165,7 +152,7 @@ textarea { min-height: 76px; resize: vertical; }
 .contact a.disp { font-size: clamp(2.25rem, 8vw, 3.5rem); text-transform: none; text-decoration: none; overflow-wrap: anywhere; }
 .contact a.disp:hover { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 6px; }
 
-@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .btn, .lesson { transition: none; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .btn { transition: none; } }
 </style>
 </head>
 <body>
@@ -204,18 +191,14 @@ textarea { min-height: 76px; resize: vertical; }
         <div class="signup">
           <div>
             <div class="lessons">
-              <label class="lesson">
-                <input type="checkbox" id="l-contemporary" name="lekce" value="Contemporary" data-time="14:30–16:00">
+              <div class="lesson">
                 <span class="t">Contemporary</span>
                 <span class="h">14:30–16:00</span>
-                <span class="dot" aria-hidden="true">✓</span>
-              </label>
-              <label class="lesson">
-                <input type="checkbox" id="l-pop" name="lekce" value="POP-dance" data-time="16:15–17:45">
+              </div>
+              <div class="lesson">
                 <span class="t">POP-dance</span>
                 <span class="h">16:15–17:45</span>
-                <span class="dot" aria-hidden="true">✓</span>
-              </label>
+              </div>
             </div>
             <p class="small meta">Tereza Monhartová &amp; ZUŠ Znojmo · Cena: <span class="todo">doplnit</span></p>
           </div>
@@ -247,7 +230,7 @@ textarea { min-height: 76px; resize: vertical; }
               <p class="err" id="err" role="alert" hidden></p>
               <div class="send">
                 <button type="submit" class="btn" id="submit">Odeslat přihlášku</button>
-                <p class="small" id="sum" aria-live="polite">Vyber si lekci.</p>
+                <p class="small">Přihláška platí na obě lekce, 14:30–17:45.</p>
               </div>
             </form>
           </div>
@@ -307,21 +290,8 @@ textarea { min-height: 76px; resize: vertical; }
 const ENDPOINT = "";
 
 const form = document.getElementById("form");
-const boxes = [...document.querySelectorAll('input[name="lekce"]')];
-const sum = document.getElementById("sum");
 const err = document.getElementById("err");
 const formbox = document.getElementById("formbox");
-
-function picked() { return boxes.filter(b => b.checked); }
-function whenText() {
-  const p = picked();
-  return p[0].dataset.time.split("–")[0] + "–" + p[p.length - 1].dataset.time.split("–")[1];
-}
-function renderSummary() {
-  const p = picked();
-  sum.textContent = p.length ? p.map(b => b.value).join(" + ") + ", " + whenText() : "Vyber si lekci.";
-}
-boxes.forEach(b => b.addEventListener("change", renderSummary));
 
 function fail(msg, el) { err.textContent = msg; err.hidden = false; if (el) el.focus(); }
 
@@ -329,14 +299,11 @@ form.addEventListener("submit", async (e) => {
   e.preventDefault();
   err.hidden = true;
   const d = new FormData(form);
-  const p = picked();
-  if (!p.length) return fail("Vyber si aspoň jednu lekci.", boxes[0]);
   if (!d.get("jmeno").trim()) return fail("Doplň jméno a příjmení.", form.jmeno);
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d.get("email").trim())) return fail("Doplň e-mail ve tvaru jmeno@domena.cz.", form.email);
   if (!form.souhlas.checked) return fail("Bez souhlasu přihlášku nejde odeslat.", form.souhlas);
 
   const data = {
-    lekce: p.map(b => b.value).join(", "),
     jmeno: d.get("jmeno").trim(),
     email: d.get("email").trim(),
     telefon: (d.get("telefon") || "").trim(),
@@ -364,7 +331,7 @@ function showDone(data) {
   h.className = "disp";
   h.textContent = ENDPOINT ? "Těším se na tebe" : "Takhle to dopadne";
   const what = document.createElement("p");
-  what.textContent = data.lekce + " · 15. 11. 2026, " + whenText();
+  what.textContent = "Contemporary + POP-dance · 15. 11. 2026, 14:30–17:45";
   const who = document.createElement("p");
   who.className = "small";
   who.textContent = ENDPOINT
@@ -373,7 +340,7 @@ function showDone(data) {
   const again = document.createElement("button");
   again.type = "button"; again.className = "btn quiet"; again.textContent = "Přihlásit dalšího";
   again.addEventListener("click", () => {
-    done.remove(); formbox.hidden = false; form.reset(); renderSummary();
+    done.remove(); formbox.hidden = false; form.reset();
     const b = document.getElementById("submit"); b.disabled = false; b.textContent = "Odeslat přihlášku";
   });
   done.append(h, what, who, again);
@@ -382,7 +349,6 @@ function showDone(data) {
   done.focus();
 }
 
-renderSummary();
 </script>
 </body>
 </html>
