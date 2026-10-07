@@ -116,6 +116,7 @@ textarea { min-height: 76px; resize: vertical; }
 .consent input { width: 18px; height: 18px; margin: 3px 0 0; accent-color: var(--ink); }
 .send { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; }
 .send .small { flex: 1 1 180px; min-width: 0; }
+.trap { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
 .err { color: var(--warn); font-size: .875rem; }
 .done { background: var(--tint); border-radius: var(--r); padding: 28px 24px; display: grid; gap: 10px; justify-items: start; }
 .done .disp { font-size: clamp(2.25rem, 7vw, 3rem); }
@@ -223,6 +224,10 @@ textarea { min-height: 76px; resize: vertical; }
                 <label for="f-note">Vzkaz (nepovinné)</label>
                 <textarea id="f-note" name="poznamka"></textarea>
               </div>
+              <div class="trap" aria-hidden="true">
+                <label for="f-web">Web</label>
+                <input type="text" id="f-web" name="web" tabindex="-1" autocomplete="off">
+              </div>
               <label class="consent">
                 <input type="checkbox" id="f-consent" name="souhlas" required>
                 <span>Souhlasím se zpracováním údajů pro účely přihlášky.</span>
@@ -307,17 +312,24 @@ form.addEventListener("submit", async (e) => {
     jmeno: d.get("jmeno").trim(),
     email: d.get("email").trim(),
     telefon: (d.get("telefon") || "").trim(),
-    poznamka: (d.get("poznamka") || "").trim()
+    poznamka: (d.get("poznamka") || "").trim(),
+    web: d.get("web") || ""
   };
 
   const btn = document.getElementById("submit");
   if (ENDPOINT) {
     btn.disabled = true; btn.textContent = "Odesílám…";
+    const again = (msg) => { btn.disabled = false; btn.textContent = "Odeslat přihlášku"; fail(msg); };
     try {
-      await fetch(ENDPOINT, { method: "POST", mode: "no-cors", body: new URLSearchParams(data) });
+      const res = await fetch(ENDPOINT, { method: "POST", body: new URLSearchParams(data) });
+      const out = await res.json();
+      if (!out.ok) {
+        return again(out.error === "plno"
+          ? "Workshop je už plný. Napiš mi na Instagram @monhartovat, dám tě na seznam náhradníků."
+          : "Přihlášku se nepodařilo uložit. Zkus to prosím znovu, nebo mi napiš na Instagram @monhartovat.");
+      }
     } catch (x) {
-      btn.disabled = false; btn.textContent = "Odeslat přihlášku";
-      return fail("Přihlášku se nepodařilo odeslat. Zkus to prosím znovu.");
+      return again("Přihlášku se nepodařilo odeslat. Zkus to prosím znovu, nebo mi napiš na Instagram @monhartovat.");
     }
   }
   showDone(data);
