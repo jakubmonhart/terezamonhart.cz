@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Tereza Monhartová, lektorka tance. Contemporary, impro, barre a pop-dance v Praze a ve Znojmě.">
+<meta property="og:title" content="Tereza Monhartová">
+<meta property="og:description" content="Lektorka tance. Contemporary, impro, barre a pop-dance v Praze a ve Znojmě.">
+<meta property="og:image" content="https://terezamonhart.cz/img/4927.jpg">
+<meta property="og:type" content="website">
+<title>Tereza Monhartová</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sofia+Sans+Extra+Condensed:wght@500;600&family=Figtree:wght@400;500&display=swap">
+<style>
+html { color-scheme: light; }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+/* Layout: fotky vedou, text jen jako popisek. Úzké písmo z letáku ve střední váze
+   a s malými písmeny, hodně vzduchu, měkké tóny místo černých ploch. */
+:root {
+  --ground: #F4F2F3;
+  --paper: #FCFBFB;
+  --ink: #2C292D;
+  --muted: #7C767E;
+  --line: #DFDBDE;
+  --tint: #E9E0E2;
+  --warn: #A0382E;
+  --display: "Sofia Sans Extra Condensed", "Arial Narrow", "Helvetica Neue Condensed", sans-serif;
+  --body: "Figtree", "Helvetica Neue", Arial, sans-serif;
+  --wrap: 1080px;
+  --r: 14px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground: #1A181B; --paper: #232024; --ink: #ECE8EB; --muted: #A39CA5; --line: #38343A; --tint: #3A3236; --warn: #F0A198;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --ground: #1A181B; --paper: #232024; --ink: #ECE8EB; --muted: #A39CA5; --line: #38343A; --tint: #3A3236; --warn: #F0A198;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { background: var(--ground); color: var(--ink); font-family: var(--body); font-size: 1rem; line-height: 1.6; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+.wrap { max-width: var(--wrap); margin-inline: auto; padding-inline: 20px; }
+h1, h2, .disp { font-family: var(--display); font-weight: 600; text-transform: uppercase; letter-spacing: .01em; line-height: .95; margin: 0; text-wrap: balance; }
+h2 { font-size: clamp(2.25rem, 6vw, 3.25rem); }
+p { margin: 0; }
+.small { font-size: .875rem; color: var(--muted); }
+.todo { border-bottom: 1px dashed var(--muted); color: var(--muted); }
+
+/* Lišta */
+.bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--ground); }
+.bar .wrap { display: flex; align-items: center; gap: 12px 28px; padding-block: 14px; }
+.bar .name { font-family: var(--display); font-weight: 600; text-transform: uppercase; letter-spacing: .01em; font-size: 1.6rem; line-height: 1; text-decoration: none; margin-right: auto; }
+.bar nav { display: flex; gap: 24px; }
+.bar nav a { text-decoration: none; font-size: .9375rem; color: var(--muted); }
+.bar nav a:hover { color: var(--ink); }
+@media (max-width: 640px) { .bar nav { display: none; } }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--ink); color: var(--ground); border: 1px solid var(--ink); border-radius: 999px;
+  font: 500 .9375rem/1 var(--body); padding: .85em 1.5em; text-decoration: none; cursor: pointer;
+  transition: opacity .2s ease;
+}
+.btn:hover { opacity: .85; }
+.btn.quiet { background: transparent; color: var(--ink); border-color: var(--line); }
+
+/* Fotky */
+.ph {
+  margin: 0; border-radius: var(--r); overflow: hidden; max-width: 100%;
+  background: linear-gradient(160deg, var(--tint), var(--paper)); position: relative;
+}
+.ph img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* Úvod */
+.hero .wrap { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 460px); gap: 40px; align-items: end; padding-block: 24px 72px; }
+.hero h1 { font-size: clamp(3.5rem, 11vw, 6.5rem); line-height: .88; }
+.hero .sub { margin-top: 16px; color: var(--muted); }
+.hero .ph { aspect-ratio: 2 / 3; }
+@media (max-width: 760px) {
+  .hero .wrap { grid-template-columns: minmax(0, 1fr); gap: 24px; padding-block: 8px 48px; }
+  .hero .ph { order: -1; }
+}
+
+section { padding-block: 72px; }
+
+/* Workshop */
+.event { background: var(--paper); border-radius: var(--r); padding: clamp(24px, 5vw, 48px); }
+.event-head { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px 40px; }
+.event-head .date { font-size: clamp(3.5rem, 13vw, 6.5rem); line-height: .85; font-variant-numeric: tabular-nums; }
+.event-head .where { font-size: clamp(1.75rem, 5vw, 2.5rem); }
+.signup { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 40px; margin-top: 40px; align-items: start; }
+@media (max-width: 860px) { .signup { grid-template-columns: minmax(0, 1fr); gap: 28px; } }
+.lessons { display: grid; gap: 12px; }
+.lesson {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 16px; align-items: center;
+  border: 1px solid var(--line); border-radius: var(--r); padding: 20px 22px; cursor: pointer;
+  transition: background .2s ease, border-color .2s ease;
+}
+.lesson:hover { border-color: var(--muted); }
+.lesson input { position: absolute; opacity: 0; pointer-events: none; }
+.lesson .t { font-family: var(--display); font-weight: 600; text-transform: uppercase; letter-spacing: .01em; font-size: clamp(2rem, 7vw, 2.75rem); line-height: 1; }
+.lesson .h { grid-column: 1; color: var(--muted); font-variant-numeric: tabular-nums; }
+.lesson .dot {
+  grid-row: 1 / span 2; grid-column: 2; width: 28px; height: 28px; border-radius: 50%;
+  border: 1px solid var(--muted); display: grid; place-items: center; font-size: .875rem; color: transparent;
+}
+.lesson:has(input:checked) { background: var(--tint); border-color: var(--ink); }
+.lesson:has(input:checked) .dot { background: var(--ink); border-color: var(--ink); color: var(--ground); }
+.lesson:has(input:focus-visible) { outline: 2px solid var(--ink); outline-offset: 3px; }
+.meta { margin-top: 16px; }
+
+form { display: grid; gap: 16px; }
+.field { display: grid; gap: 6px; min-width: 0; }
+.field label { font-size: .875rem; color: var(--muted); }
+input[type="text"], input[type="email"], input[type="tel"], textarea {
+  width: 100%; font: inherit; color: var(--ink); background: var(--ground);
+  border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px;
+}
+textarea { min-height: 76px; resize: vertical; }
+.two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 480px) { .two { grid-template-columns: minmax(0, 1fr); } }
+.consent { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 10px; font-size: .875rem; color: var(--muted); align-items: start; }
+.consent input { width: 18px; height: 18px; margin: 3px 0 0; accent-color: var(--ink); }
+.send { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; }
+.send .small { flex: 1 1 180px; min-width: 0; }
+.err { color: var(--warn); font-size: .875rem; }
+.done { background: var(--tint); border-radius: var(--r); padding: 28px 24px; display: grid; gap: 10px; justify-items: start; }
+.done .disp { font-size: clamp(2.25rem, 7vw, 3rem); }
+.done p { overflow-wrap: anywhere; }
+
+/* Galerie */
+.gallery { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; }
+.gallery .ph { aspect-ratio: 2 / 3; grid-column: span 2; }
+.gallery .ph.big { grid-column: span 4; aspect-ratio: auto; }
+.gallery .ph.big img { position: absolute; inset: 0; }
+@media (max-width: 640px) {
+  .gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .gallery .ph { grid-column: span 1; }
+  .gallery .ph.big { grid-column: span 2; aspect-ratio: 3 / 2; }
+}
+
+/* O mně */
+.about .wrap { display: grid; grid-template-columns: minmax(0, 400px) minmax(0, 1fr); gap: 48px; align-items: center; }
+.about .ph { aspect-ratio: 2 / 3; }
+.about .text { display: grid; gap: 16px; max-width: 44ch; }
+@media (max-width: 760px) { .about .wrap { grid-template-columns: minmax(0, 1fr); gap: 24px; } }
+
+.more summary { cursor: pointer; color: var(--muted); font-size: .9375rem; width: fit-content; }
+.more summary:hover { color: var(--ink); }
+.more p { margin-top: 14px; font-size: .9375rem; }
+.links { list-style: none; margin: 8px 0 0; padding: 0; border-top: 1px solid var(--line); }
+.links a { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--line); text-decoration: none; }
+.links a span:first-child { min-width: 0; }
+.links a span:last-child { color: var(--muted); transition: transform .2s ease; }
+.links a:hover span:last-child { transform: translateX(4px); color: var(--ink); }
+
+/* Kontakt */
+.contact .wrap { display: flex; flex-wrap: wrap; align-items: baseline; gap: 12px 32px; border-top: 1px solid var(--line); padding-block: 40px; }
+.contact a.disp { font-size: clamp(2.25rem, 8vw, 3.5rem); text-transform: none; text-decoration: none; overflow-wrap: anywhere; }
+.contact a.disp:hover { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 6px; }
+
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .btn, .lesson { transition: none; } }
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <div class="wrap">
+    <a class="name" href="#top">Tereza Monhartová</a>
+    <nav aria-label="Hlavní">
+      <a href="#workshop">Workshop</a>
+      <a href="#fotky">Fotky</a>
+      <a href="#o-mne">O mně</a>
+    </nav>
+    <a class="btn" href="#workshop">Přihlásit se</a>
+  </div>
+</header>
+
+<main id="top">
+  <div class="hero">
+    <div class="wrap">
+      <div>
+        <h1>Tereza Monhartová</h1>
+        <p class="sub">Praha | Znojmo<br>Contemporary | Impro | Barre | Pop-dance</p>
+      </div>
+      <figure class="ph"><img src="img/4862.jpg" alt="Tereza ve výskoku, zády k objektivu"></figure>
+    </div>
+  </div>
+
+  <section id="workshop" style="padding-top:0">
+    <div class="wrap">
+      <div class="event">
+        <div class="event-head">
+          <div class="disp date">15.11.2026</div>
+          <div class="disp where">Centrum Jízdárna<br>Znojmo</div>
+        </div>
+
+        <div class="signup">
+          <div>
+            <div class="lessons">
+              <label class="lesson">
+                <input type="checkbox" id="l-contemporary" name="lekce" value="Contemporary" data-time="14:30–16:00">
+                <span class="t">Contemporary</span>
+                <span class="h">14:30–16:00</span>
+                <span class="dot" aria-hidden="true">✓</span>
+              </label>
+              <label class="lesson">
+                <input type="checkbox" id="l-pop" name="lekce" value="POP-dance" data-time="16:15–17:45">
+                <span class="t">POP-dance</span>
+                <span class="h">16:15–17:45</span>
+                <span class="dot" aria-hidden="true">✓</span>
+              </label>
+            </div>
+            <p class="small meta">Tereza Monhartová &amp; ZUŠ Znojmo · Cena: <span class="todo">doplnit</span></p>
+          </div>
+
+          <div id="formbox">
+            <form id="form" novalidate>
+              <div class="field">
+                <label for="f-name">Jméno a příjmení</label>
+                <input type="text" id="f-name" name="jmeno" autocomplete="name" required>
+              </div>
+              <div class="two">
+                <div class="field">
+                  <label for="f-email">E-mail</label>
+                  <input type="email" id="f-email" name="email" autocomplete="email" required>
+                </div>
+                <div class="field">
+                  <label for="f-phone">Telefon (nepovinné)</label>
+                  <input type="tel" id="f-phone" name="telefon" autocomplete="tel">
+                </div>
+              </div>
+              <div class="field">
+                <label for="f-note">Vzkaz (nepovinné)</label>
+                <textarea id="f-note" name="poznamka"></textarea>
+              </div>
+              <label class="consent">
+                <input type="checkbox" id="f-consent" name="souhlas" required>
+                <span>Souhlasím se zpracováním údajů pro účely přihlášky.</span>
+              </label>
+              <p class="err" id="err" role="alert" hidden></p>
+              <div class="send">
+                <button type="submit" class="btn" id="submit">Odeslat přihlášku</button>
+                <p class="small" id="sum" aria-live="polite">Vyber si lekci.</p>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="fotky" style="padding-top:0">
+    <div class="wrap">
+      <div class="gallery">
+        <figure class="ph big"><img src="img/4701.jpg" alt="Hluboký výpad se záklonem a nataženou paží" loading="lazy"></figure>
+        <figure class="ph"><img src="img/4905.jpg" alt="Taneční póza v podřepu s paží nad hlavou" loading="lazy"></figure>
+        <figure class="ph"><img src="img/4875.jpg" alt="Úklon do strany s rozpuštěnými vlasy" loading="lazy"></figure>
+        <figure class="ph"><img src="img/4730.jpg" alt="Výskok s rozevlátou košilí" loading="lazy"></figure>
+        <figure class="ph"><img src="img/4846.jpg" alt="Záklon ve výpadu" loading="lazy"></figure>
+        <figure class="ph"><img src="img/4681.jpg" alt="Póza v kleku s paží v oblouku" loading="lazy"></figure>
+        <figure class="ph"><img src="img/4902.jpg" alt="Detail tance, dlaň před obličejem" loading="lazy"></figure>
+        <figure class="ph"><img src="img/4761.jpg" alt="Široký postoj s dlaní u tváře" loading="lazy"></figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="about" id="o-mne" style="padding-top:0">
+    <div class="wrap">
+      <figure class="ph"><img src="img/4927.jpg" alt="Portrét Terezy sedící na bílém kvádru" loading="lazy"></figure>
+      <div class="text">
+        <h2>Tančím od pěti let</h2>
+        <p>Vnímám tanec jako nádherný prostředek vyjádření sebe sama pohybem a ve svých lekcích se snažím o předání této myšlenky.</p>
+        <details class="more">
+          <summary>Celý příběh</summary>
+          <p>Tančit jsem začala v pěti letech v Základní umělecké škole ve Znojmě pod vedením Evy Lettlové (Hejtmánkové). Zde jsem absolvovala 13 let výuky základů baletu a moderního tance, dostala jsem první možnost tvořit vlastní choreografii a zatančila jsem si své první autorské duo i sólo.</p>
+          <p>Souběžně s tím jsem se účastnila čtyř po sobě jdoucích ročníků taneční stáže Tanec bez hranic, kde mne nejvíce oslovila tvorba francouzské tanečnice a choreografky Alexandry Lemoine. V tanci jsem se dále samostatně vzdělávala a na podzim roku 2022 jsem začala tanec vyučovat.</p>
+          <p>Vystudovala jsem všeobecné lékařství na 1. Lékařské fakultě Univerzity Karlovy a nyní směřuji k získání specializované způsobilosti v oboru pediatrie. Zároveň se snažím nadále rozvíjet v tanci a jeho výuce.</p>
+          <p>Zaměřuji se hlavně na styl Contemporary, Improvizaci/ Experimental a posilování formou Ballet barre. Snažím se o ucelený koncept lekce i celého kurzu.</p>
+        </details>
+        <ul class="links">
+          <li><a href="https://www.centrumtance.cz/lektor/966/tereza-monhartova" target="_blank" rel="noopener"><span>Aktuální lekce a kurzy, Centrum tance Praha</span><span aria-hidden="true">→</span></a></li>
+          <li><a href="https://tsvoila.inrs.cz/rs" target="_blank" rel="noopener"><span>Středeční kurzy v TŠ Voilà Praha, podzim 2026</span><span aria-hidden="true">→</span></a></li>
+          <li><a href="https://youtu.be/HWLTlInVjHQ" target="_blank" rel="noopener"><span>Rozhovor pro Neobyčejně Obyčejní</span><span aria-hidden="true">→</span></a></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <div class="contact" id="kontakt">
+    <div class="wrap">
+      <a class="disp" href="https://www.instagram.com/monhartovat/" target="_blank" rel="noopener">@monhartovat</a>
+      <p class="small">Napiš mi na Instagram.</p>
+    </div>
+  </div>
+</main>
+
+<script>
+// Po nasazení sem patří URL webové aplikace z Google Apps Script (viz apps-script.gs).
+// Prázdná hodnota = ukázkový režim, nic se neodesílá.
+const ENDPOINT = "";
+
+const form = document.getElementById("form");
+const boxes = [...document.querySelectorAll('input[name="lekce"]')];
+const sum = document.getElementById("sum");
+const err = document.getElementById("err");
+const formbox = document.getElementById("formbox");
+
+function picked() { return boxes.filter(b => b.checked); }
+function whenText() {
+  const p = picked();
+  return p[0].dataset.time.split("–")[0] + "–" + p[p.length - 1].dataset.time.split("–")[1];
+}
+function renderSummary() {
+  const p = picked();
+  sum.textContent = p.length ? p.map(b => b.value).join(" + ") + ", " + whenText() : "Vyber si lekci.";
+}
+boxes.forEach(b => b.addEventListener("change", renderSummary));
+
+function fail(msg, el) { err.textContent = msg; err.hidden = false; if (el) el.focus(); }
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  err.hidden = true;
+  const d = new FormData(form);
+  const p = picked();
+  if (!p.length) return fail("Vyber si aspoň jednu lekci.", boxes[0]);
+  if (!d.get("jmeno").trim()) return fail("Doplň jméno a příjmení.", form.jmeno);
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d.get("email").trim())) return fail("Doplň e-mail ve tvaru jmeno@domena.cz.", form.email);
+  if (!form.souhlas.checked) return fail("Bez souhlasu přihlášku nejde odeslat.", form.souhlas);
+
+  const data = {
+    lekce: p.map(b => b.value).join(", "),
+    jmeno: d.get("jmeno").trim(),
+    email: d.get("email").trim(),
+    telefon: (d.get("telefon") || "").trim(),
+    poznamka: (d.get("poznamka") || "").trim()
+  };
+
+  const btn = document.getElementById("submit");
+  if (ENDPOINT) {
+    btn.disabled = true; btn.textContent = "Odesílám…";
+    try {
+      await fetch(ENDPOINT, { method: "POST", mode: "no-cors", body: new URLSearchParams(data) });
+    } catch (x) {
+      btn.disabled = false; btn.textContent = "Odeslat přihlášku";
+      return fail("Přihlášku se nepodařilo odeslat. Zkus to prosím znovu.");
+    }
+  }
+  showDone(data);
+});
+
+function showDone(data) {
+  const done = document.createElement("div");
+  done.className = "done";
+  done.tabIndex = -1;
+  const h = document.createElement("div");
+  h.className = "disp";
+  h.textContent = ENDPOINT ? "Těším se na tebe" : "Takhle to dopadne";
+  const what = document.createElement("p");
+  what.textContent = data.lekce + " · 15. 11. 2026, " + whenText();
+  const who = document.createElement("p");
+  who.className = "small";
+  who.textContent = ENDPOINT
+    ? "Potvrzení přijde na " + data.email + "."
+    : "Ukázka návrhu: přihláška se nikam neodeslala.";
+  const again = document.createElement("button");
+  again.type = "button"; again.className = "btn quiet"; again.textContent = "Přihlásit dalšího";
+  again.addEventListener("click", () => {
+    done.remove(); formbox.hidden = false; form.reset(); renderSummary();
+    const b = document.getElementById("submit"); b.disabled = false; b.textContent = "Odeslat přihlášku";
+  });
+  done.append(h, what, who, again);
+  formbox.hidden = true;
+  formbox.after(done);
+  done.focus();
+}
+
+renderSummary();
+</script>
+</body>
+</html>
