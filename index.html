@@ -97,9 +97,22 @@ section { padding-block: 72px; }
 .signup { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 40px; margin-top: 40px; align-items: start; }
 @media (max-width: 860px) { .signup { grid-template-columns: minmax(0, 1fr); gap: 28px; } }
 .lessons { display: grid; gap: 12px; }
-.lesson { border: 1px solid var(--line); border-radius: var(--r); padding: 20px 22px; display: grid; gap: 2px; }
+.lesson {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 16px; align-items: center;
+  border: 1px solid var(--line); border-radius: var(--r); padding: 20px 22px; cursor: pointer;
+  transition: background .2s ease, border-color .2s ease;
+}
+.lesson:hover { border-color: var(--muted); }
+.lesson input { position: absolute; opacity: 0; pointer-events: none; }
 .lesson .t { font-family: var(--display); font-weight: 600; text-transform: uppercase; letter-spacing: .01em; font-size: clamp(2rem, 7vw, 2.75rem); line-height: 1; }
-.lesson .h { color: var(--muted); font-variant-numeric: tabular-nums; }
+.lesson .h { grid-column: 1; color: var(--muted); font-variant-numeric: tabular-nums; }
+.lesson .dot {
+  grid-row: 1 / span 2; grid-column: 2; width: 28px; height: 28px; border-radius: 50%;
+  border: 1px solid var(--muted); display: grid; place-items: center; font-size: .875rem; color: transparent;
+}
+.lesson:has(input:checked) { background: var(--tint); border-color: var(--ink); }
+.lesson:has(input:checked) .dot { background: var(--ink); border-color: var(--ink); color: var(--ground); }
+.lesson:has(input:focus-visible) { outline: 2px solid var(--ink); outline-offset: 3px; }
 .meta { margin-top: 16px; }
 
 form { display: grid; gap: 16px; }
@@ -153,7 +166,7 @@ textarea { min-height: 76px; resize: vertical; }
 .contact a.disp { font-size: clamp(2.25rem, 8vw, 3.5rem); text-transform: none; text-decoration: none; overflow-wrap: anywhere; }
 .contact a.disp:hover { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 6px; }
 
-@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .btn { transition: none; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .btn, .lesson { transition: none; } }
 </style>
 </head>
 <body>
@@ -192,14 +205,18 @@ textarea { min-height: 76px; resize: vertical; }
         <div class="signup">
           <div>
             <div class="lessons">
-              <div class="lesson">
+              <label class="lesson">
+                <input type="checkbox" id="l-contemporary" name="lekce" value="Contemporary" data-time="14:30–16:00">
                 <span class="t">Contemporary</span>
                 <span class="h">14:30–16:00</span>
-              </div>
-              <div class="lesson">
+                <span class="dot" aria-hidden="true">✓</span>
+              </label>
+              <label class="lesson">
+                <input type="checkbox" id="l-pop" name="lekce" value="POP-dance" data-time="16:15–17:45">
                 <span class="t">POP-dance</span>
                 <span class="h">16:15–17:45</span>
-              </div>
+                <span class="dot" aria-hidden="true">✓</span>
+              </label>
             </div>
             <p class="small meta">Tereza Monhartová &amp; ZUŠ Znojmo · Cena: 300 Kč</p>
           </div>
@@ -235,7 +252,7 @@ textarea { min-height: 76px; resize: vertical; }
               <p class="err" id="err" role="alert" hidden></p>
               <div class="send">
                 <button type="submit" class="btn" id="submit">Odeslat přihlášku</button>
-                <p class="small">Přihláška platí na obě lekce, 14:30–17:45.</p>
+                <p class="small" id="sum" aria-live="polite">Vyber si jednu nebo obě lekce.</p>
               </div>
             </form>
           </div>
@@ -297,6 +314,13 @@ const ENDPOINT = "";
 const form = document.getElementById("form");
 const err = document.getElementById("err");
 const formbox = document.getElementById("formbox");
+const boxes = [...document.querySelectorAll('input[name="lekce"]')];
+const sum = document.getElementById("sum");
+
+function picked() { return boxes.filter(b => b.checked); }
+function pickedText() { return picked().map(b => b.value + " " + b.dataset.time).join(" + "); }
+function renderSummary() { sum.textContent = picked().length ? pickedText() : "Vyber si jednu nebo obě lekce."; }
+boxes.forEach(b => b.addEventListener("change", renderSummary));
 
 function fail(msg, el) { err.textContent = msg; err.hidden = false; if (el) el.focus(); }
 
@@ -304,11 +328,13 @@ form.addEventListener("submit", async (e) => {
   e.preventDefault();
   err.hidden = true;
   const d = new FormData(form);
+  if (!picked().length) return fail("Vyber si aspoň jednu lekci.", boxes[0]);
   if (!d.get("jmeno").trim()) return fail("Doplň jméno a příjmení.", form.jmeno);
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d.get("email").trim())) return fail("Doplň e-mail ve tvaru jmeno@domena.cz.", form.email);
   if (!form.souhlas.checked) return fail("Bez souhlasu přihlášku nejde odeslat.", form.souhlas);
 
   const data = {
+    lekce: pickedText(),
     jmeno: d.get("jmeno").trim(),
     email: d.get("email").trim(),
     telefon: (d.get("telefon") || "").trim(),
@@ -343,7 +369,7 @@ function showDone(data) {
   h.className = "disp";
   h.textContent = ENDPOINT ? "Těším se na tebe" : "Takhle to dopadne";
   const what = document.createElement("p");
-  what.textContent = "Contemporary + POP-dance · 15. 11. 2026, 14:30–17:45";
+  what.textContent = data.lekce + " · 15. 11. 2026";
   const who = document.createElement("p");
   who.className = "small";
   who.textContent = ENDPOINT
@@ -352,7 +378,7 @@ function showDone(data) {
   const again = document.createElement("button");
   again.type = "button"; again.className = "btn quiet"; again.textContent = "Přihlásit dalšího";
   again.addEventListener("click", () => {
-    done.remove(); formbox.hidden = false; form.reset();
+    done.remove(); formbox.hidden = false; form.reset(); boxes.forEach(b => { b.checked = false; }); renderSummary();
     const b = document.getElementById("submit"); b.disabled = false; b.textContent = "Odeslat přihlášku";
   });
   done.append(h, what, who, again);
