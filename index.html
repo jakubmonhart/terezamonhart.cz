@@ -56,11 +56,15 @@ p { margin: 0; }
 /* Lišta */
 .bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--ground); }
 .bar .wrap { display: flex; align-items: center; gap: 12px 28px; padding-block: 14px; }
-.bar .name { font-family: var(--display); font-weight: 600; text-transform: uppercase; letter-spacing: .01em; font-size: 1.6rem; line-height: 1; text-decoration: none; margin-right: auto; }
+.bar .name { font-family: var(--display); font-weight: 600; text-transform: uppercase; letter-spacing: .01em; font-size: clamp(.8rem, 4.2vw, 1.6rem); white-space: nowrap; line-height: 1; text-decoration: none; margin-right: auto; }
 .bar nav { display: flex; gap: 24px; }
 .bar nav a { text-decoration: none; font-size: .9375rem; color: var(--muted); }
 .bar nav a:hover { color: var(--ink); }
-@media (max-width: 640px) { .bar nav { display: none; } }
+@media (max-width: 640px) {
+  .bar nav { display: none; }
+  .bar .wrap { gap: 10px; }
+  .bar .btn { padding: .7em 1.1em; font-size: .875rem; white-space: nowrap; }
+}
 .btn {
   display: inline-flex; align-items: center; justify-content: center;
   background: var(--ink); color: var(--ground); border: 1px solid var(--ink); border-radius: 999px;
@@ -106,8 +110,9 @@ section { padding-block: 72px; }
 .lesson input { position: absolute; opacity: 0; pointer-events: none; }
 .lesson .t { font-family: var(--display); font-weight: 600; text-transform: uppercase; letter-spacing: .01em; font-size: clamp(2rem, 7vw, 2.75rem); line-height: 1; }
 .lesson .h { grid-column: 1; color: var(--muted); font-variant-numeric: tabular-nums; }
+.lesson .p { grid-column: 1; font-size: .9375rem; margin-top: 4px; }
 .lesson .dot {
-  grid-row: 1 / span 2; grid-column: 2; width: 28px; height: 28px; border-radius: 50%;
+  grid-row: 1 / span 3; grid-column: 2; width: 28px; height: 28px; border-radius: 50%;
   border: 1px solid var(--muted); display: grid; place-items: center; font-size: .875rem; color: transparent;
 }
 .lesson:has(input:checked) { background: var(--tint); border-color: var(--ink); }
@@ -144,6 +149,7 @@ textarea { min-height: 76px; resize: vertical; }
   .gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .gallery .ph { grid-column: span 1; }
   .gallery .ph.big { grid-column: span 2; aspect-ratio: 3 / 2; }
+  .gallery .ph:last-child { display: none; }
 }
 
 /* O mně */
@@ -173,7 +179,7 @@ textarea { min-height: 76px; resize: vertical; }
 
 <header class="bar">
   <div class="wrap">
-    <a class="name" href="#top">Tereza Monhartová</a>
+    <a class="name" href="#top">Tereza Monhartová · Open class Znojmo</a>
     <nav aria-label="Hlavní">
       <a href="#workshop">Workshop</a>
       <a href="#fotky">Fotky</a>
@@ -188,7 +194,7 @@ textarea { min-height: 76px; resize: vertical; }
     <div class="wrap">
       <div>
         <h1>Tereza Monhartová</h1>
-        <p class="sub">Praha | Znojmo<br>Contemporary | Impro | Barre | Pop-dance</p>
+        <p class="sub">Open class Znojmo<br>Contemporary | Impro | Barre | Pop-dance</p>
       </div>
       <figure class="ph"><img src="img/4862.jpg" alt="Tereza ve výskoku, zády k objektivu"></figure>
     </div>
@@ -209,16 +215,18 @@ textarea { min-height: 76px; resize: vertical; }
                 <input type="checkbox" id="l-contemporary" name="lekce" value="Contemporary" data-time="14:30–16:00">
                 <span class="t">Contemporary</span>
                 <span class="h">14:30–16:00</span>
+                <span class="p">300 Kč</span>
                 <span class="dot" aria-hidden="true">✓</span>
               </label>
               <label class="lesson">
                 <input type="checkbox" id="l-pop" name="lekce" value="POP-dance" data-time="16:15–17:45">
                 <span class="t">POP-dance</span>
                 <span class="h">16:15–17:45</span>
+                <span class="p">300 Kč</span>
                 <span class="dot" aria-hidden="true">✓</span>
               </label>
             </div>
-            <p class="small meta">Tereza Monhartová &amp; ZUŠ Znojmo · Cena: 300 Kč</p>
+            <p class="small meta">Pro žáky ZUŠ Znojmo sleva 30 %, do poznámky uveďte kód „ZUŠ“.</p>
           </div>
 
           <div id="formbox">
@@ -238,7 +246,7 @@ textarea { min-height: 76px; resize: vertical; }
                 </div>
               </div>
               <div class="field">
-                <label for="f-note">Vzkaz (nepovinné)</label>
+                <label for="f-note">Poznámka (nepovinné)</label>
                 <textarea id="f-note" name="poznamka"></textarea>
               </div>
               <div class="trap" aria-hidden="true">
@@ -287,11 +295,11 @@ textarea { min-height: 76px; resize: vertical; }
           <p>Tančit jsem začala v pěti letech v Základní umělecké škole ve Znojmě pod vedením Evy Lettlové (Hejtmánkové). Zde jsem absolvovala 13 let výuky základů baletu a moderního tance, dostala jsem první možnost tvořit vlastní choreografii a zatančila jsem si své první autorské duo i sólo.</p>
           <p>Souběžně s tím jsem se účastnila čtyř po sobě jdoucích ročníků taneční stáže Tanec bez hranic, kde mne nejvíce oslovila tvorba francouzské tanečnice a choreografky Alexandry Lemoine. V tanci jsem se dále samostatně vzdělávala a na podzim roku 2022 jsem začala tanec vyučovat.</p>
           <p>Vystudovala jsem všeobecné lékařství na 1. Lékařské fakultě Univerzity Karlovy a nyní směřuji k získání specializované způsobilosti v oboru pediatrie. Zároveň se snažím nadále rozvíjet v tanci a jeho výuce.</p>
-          <p>Zaměřuji se hlavně na styl Contemporary, Improvizaci/ Experimental a posilování formou Ballet barre. Snažím se o ucelený koncept lekce i celého kurzu.</p>
+          <p>Zaměřuji se hlavně na styl Contemporary, Pop-dance, Improvizaci a posilování formou Ballet barre. Snažím se o ucelený koncept lekce i celého kurzu.</p>
         </details>
         <ul class="links">
           <li><a href="https://www.centrumtance.cz/lektor/966/tereza-monhartova" target="_blank" rel="noopener"><span>Aktuální lekce a kurzy, Centrum tance Praha</span><span aria-hidden="true">→</span></a></li>
-          <li><a href="https://tsvoila.inrs.cz/rs" target="_blank" rel="noopener"><span>Středeční kurzy v TŠ Voilà Praha, podzim 2026</span><span aria-hidden="true">→</span></a></li>
+          <li><a href="https://tsvoila.inrs.cz/rs" target="_blank" rel="noopener"><span>Středeční kurzy v TŠ Voilà Praha</span><span aria-hidden="true">→</span></a></li>
           <li><a href="https://youtu.be/HWLTlInVjHQ" target="_blank" rel="noopener"><span>Rozhovor pro Neobyčejně Obyčejní</span><span aria-hidden="true">→</span></a></li>
         </ul>
       </div>

@@ -4,13 +4,13 @@
  * Nasazení: Rozšíření → Apps Script → vložit → Nasadit → Nová implementace
  * Typ: Webová aplikace, Spustit jako: já, Přístup: kdokoli.
  * Vzniklou URL (končí /exec) vložit do konstanty ENDPOINT v index.html.
- * První řádek tabulky: Čas | Lekce | Jméno | E-mail | Telefon | Vzkaz | Potvrzení
+ * První řádek tabulky: Čas | Lekce | Jméno | E-mail | Telefon | Poznámka | Potvrzení
  *
  * @OnlyCurrentDoc
  */
 
 var KAPACITA = 0;   // největší počet přihlášených, 0 = bez omezení
-var UPOZORNIT = ""; // kam chodí upozornění na novou přihlášku, prázdné = majitel tabulky
+var UPOZORNIT = ""; // kam chodí každá nová přihláška e-mailem, prázdné = majitel tabulky
 
 function doPost(e) {
   var lock = LockService.getScriptLock();
@@ -47,7 +47,7 @@ function doPost(e) {
           "Kdy: neděle 15. 11. 2026\n" +
           "Kde: Centrum Jízdárna, Znojmo\n" +
           "Lekce: " + lekce + "\n" +
-          "Cena: 300 Kč\n\n" +
+          "Cena: 300 Kč za lekci, pro žáky ZUŠ Znojmo sleva 30 %\n\n" +
           "Kdyby se ti něco změnilo, odpověz prosím na tento e-mail.\n\n" +
           "Těším se,\nTereza"
       });
