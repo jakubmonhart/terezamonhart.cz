@@ -1,10 +1,11 @@
 /**
- * Přihlášky z terezamonhart.cz do této tabulky.
+ * Přihlášky z terezamonhart.cz do této tabulky. Přihlášenému se nic neposílá,
+ * odpovídá mu Tereza sama; skript jí jen pošle upozornění na novou přihlášku.
  *
  * Nasazení: Rozšíření → Apps Script → vložit → Nasadit → Nová implementace
  * Typ: Webová aplikace, Spustit jako: já, Přístup: kdokoli.
  * Vzniklou URL (končí /exec) vložit do konstanty ENDPOINT v index.html.
- * Záhlaví (Čas | Lekce | Jméno | E-mail | Telefon | Poznámka | Potvrzení) si skript
+ * Záhlaví (Čas | Lekce | Jméno | E-mail | Telefon | Poznámka) si skript
  * do prázdné tabulky doplní sám při první přihlášce.
  *
  * @OnlyCurrentDoc
@@ -31,41 +32,19 @@ function doPost(e) {
 
     var list = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];
     if (list.getLastRow() === 0) {
-      list.appendRow(["Čas", "Lekce", "Jméno", "E-mail", "Telefon", "Poznámka", "Potvrzení"]);
+      list.appendRow(["Čas", "Lekce", "Jméno", "E-mail", "Telefon", "Poznámka"]);
     }
     if (KAPACITA && list.getLastRow() - 1 >= KAPACITA) {
       return odpoved({ ok: false, error: "plno" });
     }
 
-    list.appendRow([new Date(), jakoText(lekce), jakoText(jmeno), jakoText(email), jakoText(telefon), jakoText(vzkaz), ""]);
-    var radek = list.getLastRow();
-
-    var potvrzeni = "odesláno";
-    try {
-      MailApp.sendEmail({
-        to: email,
-        subject: "Přihláška na workshop 15. 11. 2026",
-        body:
-          "Ahoj,\n\n" +
-          "děkuju za přihlášku, počítám s tebou.\n\n" +
-          "Kdy: neděle 15. 11. 2026\n" +
-          "Kde: Centrum Jízdárna, Znojmo\n" +
-          "Lekce: " + lekce + "\n" +
-          "Cena: 300 Kč za lekci, pro žáky ZUŠ Znojmo sleva 30 %\n\n" +
-          "Kdyby se ti něco změnilo, odpověz prosím na tento e-mail.\n\n" +
-          "Těším se,\nTereza"
-      });
-    } catch (err) {
-      potvrzeni = "NEODESLÁNO";
-    }
-    list.getRange(radek, 7).setValue(potvrzeni);
-
+    list.appendRow([new Date(), jakoText(lekce), jakoText(jmeno), jakoText(email), jakoText(telefon), jakoText(vzkaz)]);
     try {
       MailApp.sendEmail({
         to: UPOZORNIT || Session.getEffectiveUser().getEmail(),
+        replyTo: email,
         subject: "Nová přihláška: " + jmeno,
-        body: lekce + "\n" + jmeno + "\n" + email + "\n" + telefon + "\n\n" + vzkaz +
-          "\n\nPotvrzení přihlášenému: " + potvrzeni
+        body: lekce + "\n" + jmeno + "\n" + email + "\n" + telefon + "\n\n" + vzkaz
       });
     } catch (err) {}
 
