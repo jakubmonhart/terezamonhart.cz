@@ -4,7 +4,8 @@
  * Nasazení: Rozšíření → Apps Script → vložit → Nasadit → Nová implementace
  * Typ: Webová aplikace, Spustit jako: já, Přístup: kdokoli.
  * Vzniklou URL (končí /exec) vložit do konstanty ENDPOINT v index.html.
- * První řádek tabulky: Čas | Lekce | Jméno | E-mail | Telefon | Poznámka | Potvrzení
+ * Záhlaví (Čas | Lekce | Jméno | E-mail | Telefon | Poznámka | Potvrzení) si skript
+ * do prázdné tabulky doplní sám při první přihlášce.
  *
  * @OnlyCurrentDoc
  */
@@ -29,6 +30,9 @@ function doPost(e) {
     }
 
     var list = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];
+    if (list.getLastRow() === 0) {
+      list.appendRow(["Čas", "Lekce", "Jméno", "E-mail", "Telefon", "Poznámka", "Potvrzení"]);
+    }
     if (KAPACITA && list.getLastRow() - 1 >= KAPACITA) {
       return odpoved({ ok: false, error: "plno" });
     }
